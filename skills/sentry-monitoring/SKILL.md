@@ -6,7 +6,7 @@ description: Monitor sage_v2 via Sentry — check issues, events, traces, errors
 Monitor the sage_v2 pipeline via Sentry MCP server and CLI.
 
 ## MCP Server: `sentry`
-The plugin bundles the official `@sentry/mcp-server` (21 tools) for rich interactive debugging.
+This skill uses the official `@sentry/mcp-server` (21 tools) for rich interactive debugging.
 
 ### Available MCP Tools
 | Tool | Description |
@@ -35,7 +35,7 @@ The plugin bundles the official `@sentry/mcp-server` (21 tools) for rich interac
 ## Configuration
 - **Org:** `sunlec-energy-solutions-pty-lt`
 - **Project:** `sage-v2-backend`
-- **MCP Server:** `sentry` — auto-configured via plugin
+- **MCP Server:** `sentry` — configured in mcp.json (any MCP client)
 - **CLI:** `sentry` at `~/.local/bin/sentry` — fallback for scripted queries
 - **Auth:** Already authenticated (token expires 2026-04-16)
 

@@ -8,7 +8,7 @@ Manage Linear issues for the sage_v2 (Sage v2) project using the Linear MCP serv
 ## Configuration
 - **Team:** `JAC` (ID: `2ed647a5-8d87-4e9e-a498-dd41738da252`)
 - **Project:** `Sage v2` (ID: `dedf1e00-a36d-4a09-85ad-3616a3885620`)
-- **MCP Server:** `linear` — available via the plugin's MCP config
+- **MCP Server:** `linear` — available via MCP config (mcp.json, any MCP client)
 
 ## Available MCP Tools (via `linear` MCP server)
 Use the Linear MCP tools directly — they handle authentication and API calls:
