@@ -72,6 +72,8 @@ The plugin bundles four MCP servers that are automatically available when instal
 |---|---|
 | `pipeline-status` | Checking pipeline health, processing progress |
 | `document-ingestion` | Ingesting documents into pipeline |
+| `pipeline-bugs` | Known bugs, gaps, gotchas (read BEFORE running) |
+| `bank-statements` | Decrypting, parsing, ingesting SA bank statements |
 | `three-way-matching` | Running supplier matching |
 | `reconciliation` | Reconciling accounts |
 | `handover-pack` | Building accountant packs |

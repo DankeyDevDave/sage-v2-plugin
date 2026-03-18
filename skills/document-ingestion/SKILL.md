@@ -16,12 +16,26 @@ export SAGE_PROJECT_ROOT="$(pwd)" PYTHONPATH="$(pwd):$PYTHONPATH"
 
 ### Bank Statements (PDF)
 ```bash
-# Copy to watch-folder — daemon auto-processes
+# ⚠️ ENCRYPTED PDFs: Read the bank-statements skill first!
+# Pipeline manager path lacks decryption — must pre-decrypt.
+
+# Step 1: Decrypt in place (if encrypted)
+python3 -c "
+from backend.core.parsers.pdf_decrypt import ensure_decrypted
+from pathlib import Path
+for f in Path('processing/bank-statements').rglob('*.pdf'):
+    result, was = ensure_decrypted(f)
+    if was: print(f'Decrypted: {f.name}')
+"
+
+# Step 2: Copy to watch-folder — daemon auto-processes
 cp FILE.pdf watch-folder/
 
-# Or batch import
+# Or batch import (after decryption)
 python3 scripts/import_bank_statements.py --dir DIR/ --recursive
 ```
+
+**Important**: See `bank-statements` skill for per-bank handling. Capitec requires Gemini vision parser, not pdftotext.
 
 ### Supplier Invoices (Image/PDF)
 ```bash
