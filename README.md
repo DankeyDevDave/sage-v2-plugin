@@ -15,13 +15,14 @@ droid plugin update sage-v2@sage-v2-marketplace
 
 ## MCP Servers (auto-configured)
 
-The plugin bundles three MCP servers that are automatically available when installed:
+The plugin bundles four MCP servers that are automatically available when installed:
 
 | Server | Purpose | Tools |
 |---|---|---|
 | `linear` | Issue tracking (JAC project) | Create/update/close issues, comments, project management |
 | `sage-accounting` | Sage v2 API control | 29 tools — invoices, journals, recons, matching, handover, audit |
 | `sage-pipeline` | Pipeline orchestration | 12 tools — replay, ingest, snapshot, sanitize, verify, report |
+| `sentry` | Error monitoring & debugging | 21 tools — issues, events, traces, Seer AI, docs search |
 
 ### MCP Server Details
 
@@ -45,6 +46,15 @@ The plugin bundles three MCP servers that are automatically available when insta
 - Single file ingestion
 - Handover pack builder
 
+**sentry** — `sentry-mcp --access-token <token> --experimental`
+- Official `@sentry/mcp-server` (npm)
+- Issue details, event attachments, trace analysis
+- AI root cause analysis (Seer)
+- Performance profiles, release tracking
+- Doc search, project/team management
+- Org: `sunlec-energy-solutions-pty-lt`, Project: `sage-v2-backend`
+- Requires: `SENTRY_AUTH_TOKEN` env var
+
 ## Commands (slash-invoked)
 
 | Command | Description |
@@ -65,7 +75,7 @@ The plugin bundles three MCP servers that are automatically available when insta
 | `three-way-matching` | Running supplier matching |
 | `reconciliation` | Reconciling accounts |
 | `handover-pack` | Building accountant packs |
-| `sentry-monitoring` | Checking errors and monitoring via Sentry CLI |
+| `sentry-monitoring` | Checking errors, debugging, AI root cause analysis (MCP + CLI) |
 | `invoice-vision` | Extracting data from invoice images (OCR + Gemini) |
 | `linear-issues` | Creating/updating/closing Linear issues |
 | `sage-accounting` | Controlling Sage v2 via MCP (invoices, journals, recons) |
@@ -97,6 +107,7 @@ The plugin bundles three MCP servers that are automatically available when insta
 - `sentry` CLI installed and authenticated (`~/.local/bin/sentry`)
 - API keys in `.env` (never committed):
   - `LINEAR_API_KEY` — Linear issue tracking
+  - `SENTRY_AUTH_TOKEN` — Sentry MCP server auth (get via `sentry auth token`)
   - `SAGE_GEMINI_API_KEY` — Gemini vision (primary LLM)
   - `SAGE_ZHIPU_API_KEY` — Z.AI (NO BALANCE — do not rely on)
   - `SAGE_API_KEY` — Sage v2 API
@@ -105,12 +116,16 @@ The plugin bundles three MCP servers that are automatically available when insta
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  Droid Plugin                        │
-├─────────┬──────────┬──────────┬──────────┬──────────┤
-│ Linear  │  Sentry  │   Sage   │ Pipeline │  Daemon  │
-│  MCP    │  CLI     │ Acc. MCP │   MCP    │ Control  │
-├─────────┴──────────┴──────────┴──────────┴──────────┤
+┌─────────────────────────────────────────────────────────────┐
+│                     Droid Plugin                            │
+├──────────┬──────────┬──────────┬──────────┬────────────────┤
+│  Linear  │  Sentry  │   Sage   │ Pipeline │    Daemon      │
+│   MCP    │   MCP    │ Acc. MCP │   MCP    │   Control      │
+│  (issues)│ (21 tools│ (29 tools│ (12 tools│ (start/stop/   │
+│          |  errors, │ invoices,│ replay,  │  restart)      │
+│          │  traces, │ journals,│ ingest,  │                │
+│          │  Seer AI)│ recons)  │ report)  │                │
+├──────────┴──────────┴──────────┴──────────┴────────────────┤
 │              sage_v2 Pipeline                        │
 │                                                      │
 │  Documents → Watch Folder → Daemon                   │

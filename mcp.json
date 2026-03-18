@@ -15,6 +15,11 @@
       "command": "/Users/jacques/DevFolder/sage_v2/.venv/bin/python",
       "args": ["/Users/jacques/DevFolder/sage_v2/scripts/sage_pipeline_mcp.py"],
       "env": {}
+    },
+    "sentry": {
+      "command": "/opt/homebrew/bin/sentry-mcp",
+      "args": ["--access-token", "${SENTRY_AUTH_TOKEN}", "--experimental"],
+      "env": {}
     }
   }
 }
