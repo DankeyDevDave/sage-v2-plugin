@@ -32,46 +32,57 @@ You have access to:
 
 Before starting any work, read these plugin skills — they contain critical operational knowledge:
 
-1. **`pipeline-bugs`** — Known bugs, gaps, and gotchas. READ THIS FIRST to avoid wasting time.
-2. **`bank-statements`** — PDF decryption, Capitec vision parser, account numbers, per-bank handling
-3. **`document-ingestion`** — Watch-folder, daemon, ingestion API
-4. **`reconciliation`** — Supplier recon, bank recon, VAT recon
-5. **`three-way-matching`** — PO ↔ Invoice ↔ Payment matching
-6. **`handover-pack`** — Building accountant handover packs
-7. **`sentry-monitoring`** — Error monitoring via MCP + CLI
+1. **`preflight`** — ALWAYS run this first. Validates API keys, data, capabilities. Generates adaptive plan.
+2. **`pipeline-bugs`** — Known bugs, gaps, and gotchas. READ THIS to avoid wasting time.
+3. **`bank-statements`** — PDF decryption, Capitec vision parser, account numbers, per-bank handling
+4. **`document-ingestion`** — Watch-folder, daemon, ingestion API
+5. **`reconciliation`** — Supplier recon, bank recon, VAT recon
+6. **`three-way-matching`** — PO ↔ Invoice ↔ Payment matching
+7. **`handover-pack`** — Building accountant handover packs
+8. **`sentry-monitoring`** — Error monitoring via MCP + CLI
 
 ## Lessons Learned (from previous night shift 2026-03-18)
 
 ### What Went Wrong Last Time
-1. **Encrypted PDFs killed Phase 2** — 9 Capitec + 4 Nedbank statements failed with "Password-protected PDF" because the pipeline manager path lacks decryption (only daemon path has it). Lost 2+ hours.
-2. **Capitec custom fonts** — `pdftotext` garbles Capitec statements completely. Had to build a Gemini vision parser (`scripts/vision_parse_capitec.py`). Lost 1+ hour.
-3. **Daemon killed after 14 min** — was killed by signal 15, never ran long enough for matching/recon. Phases 3-7 never started.
-4. **LLM judge disabled** — set `SAGE_LLM_JUDGE_ENABLED=false` which means no validation of extracted data.
-5. **FNB duplicates** — all 7 FNB PDFs are identical (same hash). Only 1 unique statement exists.
+1. **No preflight** — agent didn't know what was possible until it hit each wall
+2. **Encrypted PDFs** — 9 Capitec + 4 Nedbank failed because pipeline manager lacked decryption
+3. **Capitec custom fonts** — `pdftotext` garbles completely, had to build Gemini vision parser
+4. **Daemon killed after 14 min** — never ran long enough for matching/recon
+5. **Missing Sage exports** — only Feb 2026 data, can't recon 11 months
+6. **LLM judge disabled** — no validation of extracted data
+7. **FNB duplicates** — all 7 PDFs identical (same hash)
 
-### How to Avoid Repeating Mistakes
-- **Decrypt FIRST**: Run `ensure_decrypted()` on all bank statements BEFORE ingesting
-- **Capitec → Vision**: Always use `scripts/vision_parse_capitec.py`, never `pdftotext`
-- **Daemon resilience**: Monitor daemon PID, auto-restart if it dies. Use `nohup` + process monitoring.
-- **Check duplicates**: Hash files before copying to watch-folder to avoid UNIQUE constraint errors
-- **Set realistic expectations**: This is a multi-hour job. Plan for 4-6 hours minimum.
+### How This Shift Is Different
+- **Phase 0: Preflight** — know everything before starting, adapt plan to reality
+- **Pipeline fixes applied** — decryption in pipeline manager, KNOWN_ACCOUNTS in base parser
+- **Capitec vision fallback** — pipeline auto-detects garbled text → falls back to Gemini vision
+- **Daemon watchdog** — auto-restart loop, never dies silently
+- **Adaptive planning** — skip blocked phases, do what's possible, flag gaps
 
 ## Your Shift Plan
 
-### Phase 1: Housekeeping (15 min)
-1. Read the `pipeline-bugs` skill — understand every known issue before proceeding
-2. Reset stuck/failed items:
+### Phase 0: Preflight (5 min) — ALWAYS DO THIS FIRST
 ```bash
-python3 -c "
-import sqlite3
-conn = sqlite3.connect('backend/data/unified_processing.db')
-conn.execute(\"UPDATE processing_items SET status='pending', error_message=NULL, error_count=0 WHERE status IN ('processing','failed')\")
-print(conn.execute('SELECT changes()').fetchone()[0], 'items reset')
-conn.close()
-"
+cd /Users/jacques/DevFolder/sage_v2
+source .venv/bin/activate
+export SAGE_PROJECT_ROOT="$(pwd)" PYTHONPATH="$(pwd):$PYTHONPATH"
+
+# Run preflight with auto-fix
+python3 scripts/preflight.py --fix --json > /tmp/preflight_result.json
+python3 scripts/preflight.py --fix
 ```
-3. Verify `.env` has `SAGE_LLM_JUDGE_ENABLED=false` and valid `SAGE_GEMINI_API_KEY`
-4. Commit and push checkpoint
+
+**Read the output carefully.** The preflight tells you:
+- What API keys work and what don't
+- What data exists and what's missing
+- What the system CAN do (capability map)
+- Which phases are possible vs blocked (adaptive plan)
+
+**Adapt your plan based on preflight results.** Do NOT follow a fixed plan — follow the adaptive plan.
+
+### Phase 1: Housekeeping (10 min)
+1. Commit preflight results: `git add -A && git commit -m "chore: night shift preflight checkpoint" && git push`
+2. Verify `.env` has correct settings (preflight already checked)
 
 ### Phase 2: Decrypt & Parse Bank Statements (1-2 hours)
 **Do NOT just copy to watch-folder — encrypted PDFs will fail in pipeline manager path.**

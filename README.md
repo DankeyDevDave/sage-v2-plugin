@@ -65,6 +65,7 @@ The plugin bundles four MCP servers that are automatically available when instal
 | `/sage-match <supplier>` | Run 3-way PO ↔ Invoice ↔ Payment matching |
 | `/sage-recon <supplier\|bank\|vat>` | Run supplier, bank, or VAT reconciliation |
 | `/sage-handover [period]` | Generate accountant handover pack |
+| `/preflight [--fix]` | Pre-flight check — validate readiness before any pipeline work |
 
 ## Skills (auto-invoked by model)
 
@@ -82,6 +83,7 @@ The plugin bundles four MCP servers that are automatically available when instal
 | `linear-issues` | Creating/updating/closing Linear issues |
 | `sage-accounting` | Controlling Sage v2 via MCP (invoices, journals, recons) |
 | `sage-pipeline` | Pipeline replay, ingest, snapshot, sanitize, verify |
+| `preflight` | Pre-flight check — ALWAYS run before pipeline work |
 
 ## Droids (subagents)
 
