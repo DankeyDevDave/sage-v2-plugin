@@ -1,9 +1,9 @@
 ---
 name: sage-accounting
-description: Control the Sage 50c accounting system via MCP — read/write Sage data, manage invoices, journals, recons, and handover packs. Use when asked to interact with Sage, query accounting data, post journals, or manage the Sage API.
+description: Control the Sage v2 accounting system via MCP — read/write Sage data, manage invoices, journals, recons, and handover packs. Use when asked to interact with Sage, query accounting data, post journals, or manage the Sage API.
 ---
 
-Control the Sage 50c accounting system via the `sage-accounting` MCP server (29 tools).
+Control the Sage v2 accounting system via the `sage-accounting` MCP server (29 tools).
 
 ## MCP Server: `sage-accounting`
 Runs via: `uv run --directory /Users/jacques/DevFolder/sage_v2 sage-accounting-mcp`
@@ -13,7 +13,7 @@ Runs via: `uv run --directory /Users/jacques/DevFolder/sage_v2 sage-accounting-m
 ### Connection & Workspace
 | Tool | Description |
 |---|---|
-| `sage_test_connection` | Test Sage 50c API connectivity |
+| `sage_test_connection` | Test Sage v2 API connectivity |
 | `accounting_workspace_snapshot` | Full snapshot of all Sage accounting tables |
 
 ### Inbox & Watch Folder
@@ -105,4 +105,4 @@ Use `accounting_workspace_snapshot` or direct table queries to inspect:
 - `backend/mcp/server.py` — MCP server definition (all 29 tools)
 - `backend/mcp/_shared.py` — shared helpers
 - `backend/api/routers/` — underlying API routers
-- `backend/core/sage_api/client.py` — Sage 50c API client
+- `backend/core/sage_api/client.py` — Sage v2 API client

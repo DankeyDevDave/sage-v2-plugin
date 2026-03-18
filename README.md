@@ -1,6 +1,6 @@
 # sage-v2 — Droid Plugin
 
-Automated accounting pipeline plugin for [Sage 50c](https://www.sage.com/za/) financial close-out. Ingests documents, runs OCR/vision extraction, 3-way matching, reconciliation, and generates accountant handover packs.
+Automated accounting pipeline plugin for [Sage v2](https://www.sage.com/za/) financial close-out. Ingests documents, runs OCR/vision extraction, 3-way matching, reconciliation, and generates accountant handover packs.
 
 ## Installation
 
@@ -20,7 +20,7 @@ The plugin bundles three MCP servers that are automatically available when insta
 | Server | Purpose | Tools |
 |---|---|---|
 | `linear` | Issue tracking (JAC project) | Create/update/close issues, comments, project management |
-| `sage-accounting` | Sage 50c API control | 29 tools — invoices, journals, recons, matching, handover, audit |
+| `sage-accounting` | Sage v2 API control | 29 tools — invoices, journals, recons, matching, handover, audit |
 | `sage-pipeline` | Pipeline orchestration | 12 tools — replay, ingest, snapshot, sanitize, verify, report |
 
 ### MCP Server Details
@@ -31,7 +31,7 @@ The plugin bundles three MCP servers that are automatically available when insta
 - Requires: `LINEAR_API_KEY` env var
 
 **sage-accounting** — `uv run --directory sage_v2 sage-accounting-mcp`
-- Full Sage 50c read/write access
+- Full Sage v2 read/write access
 - Supplier/customer/bank/inventory/GL queries
 - Journal submission, approval, posting workflow
 - 3-way matching, reconciliation, VAT
@@ -68,7 +68,7 @@ The plugin bundles three MCP servers that are automatically available when insta
 | `sentry-monitoring` | Checking errors and monitoring via Sentry CLI |
 | `invoice-vision` | Extracting data from invoice images (OCR + Gemini) |
 | `linear-issues` | Creating/updating/closing Linear issues |
-| `sage-accounting` | Controlling Sage 50c via MCP (invoices, journals, recons) |
+| `sage-accounting` | Controlling Sage v2 via MCP (invoices, journals, recons) |
 | `sage-pipeline` | Pipeline replay, ingest, snapshot, sanitize, verify |
 
 ## Droids (subagents)
@@ -99,7 +99,7 @@ The plugin bundles three MCP servers that are automatically available when insta
   - `LINEAR_API_KEY` — Linear issue tracking
   - `SAGE_GEMINI_API_KEY` — Gemini vision (primary LLM)
   - `SAGE_ZHIPU_API_KEY` — Z.AI (NO BALANCE — do not rely on)
-  - `SAGE_API_KEY` — Sage 50c API
+  - `SAGE_API_KEY` — Sage v2 API
   - `SAGE_SENTRY_DSN` — Sentry error tracking
 
 ## Architecture

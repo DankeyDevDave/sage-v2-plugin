@@ -21,7 +21,7 @@ export SAGE_PROJECT_ROOT="$(pwd)" PYTHONPATH="$(pwd):$PYTHONPATH"
 
 You have access to:
 - **Linear MCP** — create/update/close issues in the JAC project
-- **sage-accounting MCP** — 29 tools for Sage 50c (journals, recons, matching, handover)
+- **sage-accounting MCP** — 29 tools for Sage v2 (journals, recons, matching, handover)
 - **sage-pipeline MCP** — 12 tools for pipeline control (replay, ingest, snapshot)
 - **Sentry CLI** — `sentry` command for error monitoring
 - **Bash** — full shell access
