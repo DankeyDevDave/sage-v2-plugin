@@ -1,0 +1,12 @@
+{
+  "name": "sage-v2",
+  "description": "Automated accounting pipeline for Sage 50c — document ingestion, OCR/vision extraction, 3-way matching, reconciliation, and accountant handover packs",
+  "version": "1.0.0",
+  "author": {
+    "name": "Sunlec Energy Solutions",
+    "email": "dev@sunlec.co.za"
+  },
+  "homepage": "https://github.com/DankeyDevDave/sage_v2",
+  "repository": "https://github.com/DankeyDevDave/sage_v2",
+  "license": "MIT"
+}

@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "linear": {
+      "command": "/opt/homebrew/bin/linear-mcp",
+      "env": {
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+      }
+    },
+    "sage-accounting": {
+      "command": "uv",
+      "args": ["run", "--directory", "/Users/jacques/DevFolder/sage_v2", "sage-accounting-mcp"],
+      "env": {}
+    },
+    "sage-pipeline": {
+      "command": "/Users/jacques/DevFolder/sage_v2/.venv/bin/python",
+      "args": ["/Users/jacques/DevFolder/sage_v2/scripts/sage_pipeline_mcp.py"],
+      "env": {}
+    }
+  }
+}
